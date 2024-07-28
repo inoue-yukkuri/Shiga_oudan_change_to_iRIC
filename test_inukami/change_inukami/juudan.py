@@ -17,7 +17,7 @@ transformer = Transformer.from_crs("EPSG:4612", "EPSG:2448", always_xy=True)
 
 # 緯度経度を変換します
 def transform_coordinates(lat, lon):
-    x, y = transformer.transform(lon, lat)
+    x, y = transformer.transform(lat, lon)  # 緯度と経度の順序を正しく修正
     return x, y
 
 # 左岸と右岸の座標を分けるためのデータフレームを準備
