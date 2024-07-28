@@ -13,7 +13,7 @@ if not os.path.exists(input_file_path):
 df = pd.read_csv(input_file_path, encoding='shift_jis')
 
 # EPSG:4612からEPSG:2448への変換を行うTransformerを作成します
-transformer = Transformer.from_crs("EPSG:4612", "EPSG:2448", always_xy=True)
+transformer = Transformer.from_crs("EPSG:4326", "EPSG:2448", always_xy=True)
 
 # 緯度経度を変換します
 def transform_coordinates(lat, lon):
