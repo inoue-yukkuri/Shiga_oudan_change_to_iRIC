@@ -13,11 +13,11 @@ if not os.path.exists(input_file_path):
 df = pd.read_csv(input_file_path, encoding='shift_jis')
 
 # EPSG:4612からEPSG:2448への変換を行うTransformerを作成します
-transformer = Transformer.from_crs("EPSG:4326", "EPSG:2448", always_xy=True)
+transformer = Transformer.from_crs("EPSG:4612", "EPSG:2448", always_xy=True)
 
 # 緯度経度を変換します
 def transform_coordinates(lat, lon):
-    x, y = transformer.transform(lat, lon)  # 緯度と経度の順序を正しく修正
+    x, y = transformer.transform(lon, lat)
     return x, y
 
 # 左岸と右岸の座標を分けるためのデータフレームを準備
@@ -25,8 +25,8 @@ left_bank = df[df['左右岸'] == '左岸']
 right_bank = df[df['左右岸'] == '右岸']
 
 # 左岸と右岸の座標を変換
-left_bank[['LX', 'LY']] = left_bank.apply(lambda row: pd.Series(transform_coordinates(row['緯度'], row['経度'])), axis=1)
-right_bank[['RX', 'RY']] = right_bank.apply(lambda row: pd.Series(transform_coordinates(row['緯度'], row['経度'])), axis=1)
+left_bank[['LY', 'LX']] = left_bank.apply(lambda row: pd.Series(transform_coordinates(row['緯度'], row['経度'])), axis=1)
+right_bank[['RY', 'RX']] = right_bank.apply(lambda row: pd.Series(transform_coordinates(row['緯度'], row['経度'])), axis=1)
 
 # 左岸と右岸のデータフレームをマージ
 merged_df = pd.merge(left_bank[['距離標名', 'LX', 'LY']], right_bank[['距離標名', 'RX', 'RY']], on='距離標名')
